@@ -3,13 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Flat Fix</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -25,29 +22,16 @@ header {
   text-align: center;
 }
 
-header h1 {
-  margin: 0;
-  font-size: 30px;
-}
-
-header p {
-  margin-bottom: 0;
-}
-
 .container {
-  padding: 20px;
+  padding: 18px;
   max-width: 600px;
   margin: auto;
-}
-
-h2 {
-  color: #087b55;
 }
 
 .card {
   background: white;
   padding: 18px;
-  margin: 12px 0;
+  margin: 14px 0;
   border-radius: 12px;
   box-shadow: 0 2px 8px #ddd;
 }
@@ -63,14 +47,25 @@ button {
   margin-top: 10px;
 }
 
-button:active {
-  background: #055b40;
+input, textarea, select {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+#form { display: none; }
+
+img {
+  max-width: 100%;
+  border-radius: 8px;
 }
 
 footer {
   text-align: center;
   padding: 20px;
-  color: #666;
 }
 </style>
 </head>
@@ -78,8 +73,8 @@ footer {
 <body>
 
 <header>
-  <h1>FLAT FIX</h1>
-  <p>Your City, Your Responsibility</p>
+<h1>FLAT FIX</h1>
+<p>Your City, Your Responsibility</p>
 </header>
 
 <div class="container">
@@ -87,54 +82,209 @@ footer {
 <h2>Welcome to Flat Fix 👋</h2>
 <p>Report local problems and help improve your city.</p>
 
+<div id="home">
 <h2>Report an Issue</h2>
 
 <div class="card">
-  🛣️ Road Damage
-  <button onclick="selectIssue('Road Damage')">Report Now</button>
+🛣️ Road Damage
+<button onclick="openForm('Road Damage')">Report Now</button>
 </div>
 
 <div class="card">
-  🕳️ Potholes
-  <button onclick="selectIssue('Potholes')">Report Now</button>
+🕳️ Potholes
+<button onclick="openForm('Potholes')">Report Now</button>
 </div>
 
 <div class="card">
-  🗑️ Garbage
-  <button onclick="selectIssue('Garbage')">Report Now</button>
+🗑️ Garbage
+<button onclick="openForm('Garbage')">Report Now</button>
 </div>
 
 <div class="card">
-  💡 Street Lights
-  <button onclick="selectIssue('Street Lights')">Report Now</button>
+💡 Street Lights
+<button onclick="openForm('Street Lights')">Report Now</button>
 </div>
 
 <div class="card">
-  💧 Water Leakage
-  <button onclick="selectIssue('Water Leakage')">Report Now</button>
+💧 Water Leakage
+<button onclick="openForm('Water Leakage')">Report Now</button>
+</div>
+</div>
+
+<div id="form" class="card">
+<h2>Submit Complaint</h2>
+
+<label>Issue Type</label>
+<input id="issue" readonly>
+
+<label>Upload Photo</label>
+<input type="file" id="photo" accept="image/*">
+
+<img id="preview" style="display:none">
+
+<label>Problem Description</label>
+<textarea id="description" rows="4"
+placeholder="Describe the problem..."></textarea>
+
+<label>Location</label>
+<button onclick="getLocation()">Get GPS Location</button>
+<p id="location">Location not selected</p>
+
+<button onclick="submitReport()">Submit Complaint</button>
+<button onclick="goHome()">Back</button>
 </div>
 
 <h2>My Reports</h2>
-<div class="card">
-  Track your submitted complaints here.
-</div>
-
-<h2>Nearby Issues</h2>
-<div class="card">
-  Discover problems reported in your area.
+<div id="reports" class="card">
+No reports submitted yet.
 </div>
 
 </div>
 
 <footer>
-  <p>© 2026 Flat Fix | Making Cities Better</p>
+© 2026 Flat Fix | Making Cities Better
 </footer>
 
 <script>
-function selectIssue(issue) {
-  alert("Selected Issue: " + issue);
+
+let latitude = "";
+let longitude = "";
+
+function openForm(issue) {
+  document.getElementById("home").style.display = "none";
+  document.getElementById("form").style.display = "block";
+  document.getElementById("issue").value = issue;
+}
+
+function goHome() {
+  document.getElementById("form").style.display = "none";
+  document.getElementById("home").style.display = "block";
+}
+
+function getLocation() {
+  if (!navigator.geolocation) {
+    alert("GPS not supported");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      latitude = position.coords.latitude;
+      longitude = position.coords.longitude;
+
+      document.getElementById("location").innerText =
+        latitude + ", " + longitude;
+    },
+    function() {
+      alert("Please allow location permission");
+    }
+  );
+}
+
+document.getElementById("photo").onchange = function(event) {
+  const file = event.target.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      const preview = document.getElementById("preview");
+      preview.src = e.target.result;
+      preview.style.display = "block";
+    };
+
+    reader.readAsDataURL(file);
+  }
+};
+
+function submitReport() {
+  const issue = document.getElementById("issue").value;
+  const description = document.getElementById("description").value;
+  const photo = document.getElementById("photo").files[0];
+
+  if (!description.trim()) {
+    alert("Please describe the problem");
+    return;
+  }
+
+  const report = {
+    issue: issue,
+    description: description,
+    location: latitude && longitude
+      ? latitude + ", " + longitude
+      : "Not provided",
+    date: new Date().toLocaleString()
+  };
+
+  let reports = JSON.parse(localStorage.getItem("flatfix_reports") || "[]");
+
+  reports.push(report);
+
+  localStorage.setItem("flatfix_reports", JSON.stringify(reports));
+
+  alert("Complaint saved successfully!");
+
+  document.getElementById("description").value = "";
+  document.getElementById("photo").value = "";
+  document.getElementById("preview").style.display = "none";
+
+  goHome();
+  showReports();
+}
+
+function showReports() {
+  const reports = JSON.parse(localStorage.getItem("flatfix_reports") || "[]");
+
+  document.getElementById("reports").innerHTML =
+    reports.length
+    ? reports.map(r =>
+      `<p><b>${r.issue}</b><br>${r.description}<br>${r.date}</p><hr>`
+    ).join("")
+    : "No reports submitted yet.";
+}
+
+showReports();
+
+</script>
+<section style="padding:20px;background:#fff;margin:15px;border-radius:12px;">
+  <h2>🌍 Flat Fix Community</h2>
+  <p>Share what's happening in your area.</p>
+
+  <textarea id="postText" placeholder="What's happening near you?"
+  style="width:100%;padding:12px;height:80px;"></textarea>
+
+  <input type="file" id="postPhoto" accept="image/*,video/*">
+
+  <button onclick="createPost()"
+  style="padding:12px;background:#1769ff;color:white;border:0;border-radius:8px;">
+  ➕ Create Post
+  </button>
+
+  <div id="communityFeed"></div>
+</section>
+
+<script>
+function createPost() {
+  let text = document.getElementById("postText").value.trim();
+
+  if (!text) {
+    alert("Please write something!");
+    return;
+  }
+
+  let post = document.createElement("div");
+  post.style.cssText = "padding:15px;margin-top:15px;background:#f1f4f9;border-radius:10px;";
+
+  post.innerHTML = `
+    <p>${text.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</p>
+    <button onclick="this.innerText='❤️ Liked'">🤍 Like</button>
+    <button onclick="let c=prompt('Write a comment');if(c) this.parentElement.querySelector('.comments').innerHTML += '<p>'+c.replace(/</g,'&lt;')+'</p>'">💬 Comment</button>
+    <div class="comments"></div>
+  `;
+
+  document.getElementById("communityFeed").prepend(post);
+  document.getElementById("postText").value = "";
 }
 </script>
-
 </body>
 </html>
