@@ -1,1 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Flat Fix</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f3f6fa;
+  color: #222;
+}
+
+header {
+  background: #087b55;
+  color: white;
+  padding: 22px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 30px;
+}
+
+header p {
+  margin-bottom: 0;
+}
+
+.container {
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+
+h2 {
+  color: #087b55;
+}
+
+.card {
+  background: white;
+  padding: 18px;
+  margin: 12px 0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px #ddd;
+}
+
+button {
+  background: #087b55;
+  color: white;
+  border: none;
+  padding: 13px;
+  width: 100%;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+button:active {
+  background: #055b40;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>FLAT FIX</h1>
+  <p>Your City, Your Responsibility</p>
+</header>
+
+<div class="container">
+
+<h2>Welcome to Flat Fix 👋</h2>
+<p>Report local problems and help improve your city.</p>
+
+<h2>Report an Issue</h2>
+
+<div class="card">
+  🛣️ Road Damage
+  <button onclick="selectIssue('Road Damage')">Report Now</button>
+</div>
+
+<div class="card">
+  🕳️ Potholes
+  <button onclick="selectIssue('Potholes')">Report Now</button>
+</div>
+
+<div class="card">
+  🗑️ Garbage
+  <button onclick="selectIssue('Garbage')">Report Now</button>
+</div>
+
+<div class="card">
+  💡 Street Lights
+  <button onclick="selectIssue('Street Lights')">Report Now</button>
+</div>
+
+<div class="card">
+  💧 Water Leakage
+  <button onclick="selectIssue('Water Leakage')">Report Now</button>
+</div>
+
+<h2>My Reports</h2>
+<div class="card">
+  Track your submitted complaints here.
+</div>
+
+<h2>Nearby Issues</h2>
+<div class="card">
+  Discover problems reported in your area.
+</div>
+
+</div>
+
+<footer>
+  <p>© 2026 Flat Fix | Making Cities Better</p>
+</footer>
+
+<script>
+function selectIssue(issue) {
+  alert("Selected Issue: " + issue);
+}
+</script>
+
+</body>
+</html>
