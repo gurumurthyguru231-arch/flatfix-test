@@ -68,8 +68,15 @@ footer {
   padding: 20px;
 }
 </style>
-</head>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head>
+<script>
+const SUPABASE_URL = "https://ajvxqfldmhmwnidewmpq.supabase.co";
+const SUPABASE_KEY = "ನಿಮ್ಮ_Publishable_Key";
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+</script>
 <body>
 
 <header>
